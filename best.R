@@ -7,6 +7,8 @@ best <-function(state, outcome) {
         ## Read outcome data by the name of outcome
         outcome_data <- read.csv("outcome-of-care-measures.csv", 
                                  colClasses = "character")
+        
+        ## Check that state and outcome are valid
         if (outcome == "heart attack") {
                 name = 12
         }
@@ -17,12 +19,17 @@ best <-function(state, outcome) {
                 name = 24  
         }
         else {
-                print("invalid outcome")
+                ## use stop to print error message when input wrong outcome
+                stop("invalid outcome")
         }
-        ## extract the hospital without NA values
-        # good <- complete.cases(outcome_data[, name])
-        # no_missing <- outcome_data[good, ]
-        ## Check that state and outcome are valid
+        
+        ## use stop to print error message when input wrong state
+        judge_state <- outcome_data$State[outcome_data$State == state]
+        if(length(judge_state) == 0){
+                stop("invalid state")
+        }
+        
+        
         
         ## Return hospital name in that state with lowest 30-day death 
         ## rate
