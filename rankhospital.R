@@ -1,4 +1,5 @@
 rankhospital <- function(state, outcome, num = "best") { 
+        library(dplyr)
         ## Read outcome data
         outcome_data <- read.csv("outcome-of-care-measures.csv",
                                  na.strings = "Not Available", 
@@ -41,21 +42,20 @@ rankhospital <- function(state, outcome, num = "best") {
         s <- s[good, ]
         
         ## 生成子表格，使之以死亡率为对象排序
-        rate_list <- split(s, s[name])
-        rate_list[[1]]$Hospital.Name
+        
+        s_test <- arrange(s, s[ , name], s$Hospital.Name, by_group = FALSE)
         ## 如果是最差的，则取列的最后一个元素
         if (num == "worst") {
-                num = length(rate_list)
+                num = length(s_test[ ,name])
         }
         
         ## 如果请求排名大于总排名，返回NA，否则返回对应排名的医院名称
-        if (num > length(rate_list)) {
+        if (num > length(s_test[ ,name])) {
                 print(NA)
         }
         ## Return hospital name in that state with the given rank 
         ## 30-day death rate
         else {
-                rate_list[[num]]$Hospital.Name
+                s_test$Hospital.Name[num]
                 }
-        
 }
